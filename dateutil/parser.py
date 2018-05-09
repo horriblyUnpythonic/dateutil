@@ -21,6 +21,7 @@ import string
 import time
 import collections
 from io import StringIO
+from logging import getLogger
 
 from six import text_type, binary_type, integer_types
 
@@ -28,6 +29,8 @@ from . import relativedelta
 from . import tz
 
 __all__ = ["parse", "parserinfo"]
+
+logger = getLogger(__name__)
 
 
 class _timelex(object):
@@ -375,6 +378,7 @@ class parser(object):
                            format.
         """
 
+        logger.info('dateutil.parser.parse - {}'.format(timestr))
         default_specified = default is not None
 
         if not default_specified:
@@ -421,6 +425,7 @@ class parser(object):
                                      "tz string, or int offset.")
                 ret = ret.replace(tzinfo=tzinfo)
             elif res.tzname and res.tzname in time.tzname:
+                logger.warning('dateutil.parser.parse is setting tz to local! - {}'.format(timestr))
                 ret = ret.replace(tzinfo=tz.tzlocal())
             elif res.tzoffset == 0:
                 ret = ret.replace(tzinfo=tz.tzutc())
